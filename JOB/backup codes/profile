@@ -1,0 +1,479 @@
+<?php
+include '../includes/header.php';
+include '../includes/config.php'; // Include DB connection
+
+
+// Determine which user profile to fetch based on the logged-in user
+if (isset($_SESSION['role']) && $_SESSION['role'] === 'admin') {
+    // Admin can access any user's profile by passing 'id' in the URL
+    $user_id = isset($_GET['id']) ? (int)$_GET['id'] : $_SESSION['user_id'];
+} else {
+    // Regular users can only view their own profile
+    $user_id = $_SESSION['user_id']; // Assuming the user ID is stored in session after login
+}
+
+// Validate $user_id to prevent invalid queries
+if (!$user_id || !is_numeric($user_id)) {
+    die("Invalid user ID.");
+}
+
+// Fetch user data from the database based on the user ID
+$query = "SELECT * FROM users WHERE id = ?";
+$stmt = $conn->prepare($query);
+$stmt->bind_param("i", $user_id); // Bind $user_id as an integer
+$stmt->execute();
+$result = $stmt->get_result();
+
+if ($result->num_rows === 0) {
+    die("User not found.");
+}
+
+$user = $result->fetch_assoc();
+
+// Handle profile picture upload
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['profile_pic'])) {
+    if ($_FILES["profile_pic"]["size"] == 0) {
+        echo "<div class='alert alert-danger'>Please select a file to upload.</div>";
+    } else {
+        $target_dir = "../uploads/"; // Ensure this directory exists and is writable
+        $target_file = $target_dir . basename($_FILES["profile_pic"]["name"]);
+        $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
+
+        // Check if the uploaded file is a valid image
+        if (getimagesize($_FILES["profile_pic"]["tmp_name"])) {
+            if (move_uploaded_file($_FILES["profile_pic"]["tmp_name"], $target_file)) {
+                $update_query = "UPDATE users SET uploaded_file = ? WHERE id = ?";
+                $stmt = $conn->prepare($update_query);
+                $stmt->bind_param("si", $target_file, $user_id);
+
+                if ($stmt->execute()) {
+                    echo "<div class='alert alert-success'>Profile picture updated successfully.</div>";
+                    echo "<script>window.location.href = 'profile.php?id=$user_id';</script>";
+                    exit();
+                } else {
+                    echo "<div class='alert alert-danger'>Error updating profile picture.</div>";
+                }
+            } else {
+                echo "<div class='alert alert-danger'>Sorry, there was an error uploading your file.</div>";
+            }
+        } else {
+            echo "<div class='alert alert-danger'>File is not a valid image.</div>";
+        }
+    }
+}
+
+
+
+// Handle profile picture removal
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['remove_profile_pic'])) {
+    // Check if a profile picture exists
+    if (!empty($user['uploaded_file'])) {
+        // Clear the uploaded_file column in the database (do not delete the file from the server)
+        $update_query = "UPDATE users SET uploaded_file = NULL WHERE id = ?";
+        $stmt = $conn->prepare($update_query);
+        $stmt->bind_param("i", $user_id);
+
+        if ($stmt->execute()) {
+            echo "<div class='alert alert-success'>Profile picture removed successfully.</div>";
+            echo "<script>window.location.href = 'profile.php?id=$user_id';</script>";
+            exit();
+        } else {
+            echo "<div class='alert alert-danger'>Error removing profile picture from the database.</div>";
+        }
+    } else {
+        echo "<div class='alert alert-danger'>No profile picture found to remove.</div>";
+    }
+}
+
+
+
+// Handle caption (bio) update
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['caption'])) {
+    $caption = trim($_POST['caption']);
+    $update_caption_query = "UPDATE users SET caption = ? WHERE id = ?";
+    $stmt = $conn->prepare($update_caption_query);
+    $stmt->bind_param("si", $caption, $user_id);
+
+    if ($stmt->execute()) {
+        echo "<div class='alert alert-success'>Caption updated successfully.</div>";
+        header("Location: profile.php?id=$user_id");
+        exit();
+    } else {
+        echo "<div class='alert alert-danger'>Failed to update caption.</div>";
+    }
+}
+
+// Handle work experience, skills, LinkedIn, and portfolio updates
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_profile'])) {
+    // Sanitize inputs
+    $work_experience = trim($_POST['work_experience']);
+    $skills = trim($_POST['skills']);
+    $linkedin_profile = trim($_POST['linkedin_profile']);
+    $portfolio_url = trim($_POST['portfolio_url']);
+
+    // Update query
+    $update_query = "UPDATE users 
+                     SET work_experience = ?, 
+                         skills = ?, 
+                         linkedin_profile = ?, 
+                         portfolio_url = ? 
+                     WHERE id = ?";
+    $stmt = $conn->prepare($update_query);
+    $stmt->bind_param("ssssi", $work_experience, $skills, $linkedin_profile, $portfolio_url, $user_id);
+
+    if ($stmt->execute()) {
+        echo "<div class='alert alert-success'>Profile updated successfully.</div>";
+        header("Location: profile.php?id=$user_id");
+        exit();
+    } else {
+        echo "<div class='alert alert-danger'>Failed to update profile.</div>";
+    }
+}
+
+// Handle resume upload
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['resume'])) {
+    if ($_FILES["resume"]["size"] == 0) {
+        echo "<div class='alert alert-danger'>Please select a file to upload.</div>";
+    } else {
+        $target_dir = "../uploads/resumes/"; // Ensure this directory exists and is writable
+        $target_file = $target_dir . basename($_FILES["resume"]["name"]);
+        $fileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
+        // Allowed file types
+        $allowed_types = ['pdf', 'doc', 'docx'];
+        // Check if the file type is allowed
+        if (!in_array($fileType, $allowed_types)) {
+            echo "<div class='alert alert-danger'>Only PDF, DOC, and DOCX files are allowed.</div>";
+        } elseif ($_FILES["resume"]["size"] > 5 * 1024 * 1024) { // Limit file size to 5MB
+            echo "<div class='alert alert-danger'>File size must not exceed 5MB.</div>";
+        } else {
+            // If a previous resume exists, delete it
+            if (!empty($user['resume_file']) && file_exists($user['resume_file'])) {
+                unlink($user['resume_file']);
+            }
+            // Move the uploaded file to the target directory
+            if (move_uploaded_file($_FILES["resume"]["tmp_name"], $target_file)) {
+                // Save the file path in the database
+                $update_query = "UPDATE users SET resume_file = ? WHERE id = ?";
+                $stmt = $conn->prepare($update_query);
+                $stmt->bind_param("si", $target_file, $user_id);
+                if ($stmt->execute()) {
+                    echo "<div class='alert alert-success'>Resume uploaded successfully.</div>";
+                    echo "<script>window.location.href = 'profile.php?id=$user_id';</script>";
+                    exit();
+                } else {
+                    echo "<div class='alert alert-danger'>Error updating resume file in the database.</div>";
+                }
+            } else {
+                echo "<div class='alert alert-danger'>Sorry, there was an error uploading your file.</div>";
+            }
+        }
+    }
+}
+
+// Handle resume removal
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['remove_resume'])) {
+    // Check if a resume exists
+    if (!empty($user['resume_file'])) {
+        // Clear the resume_file column in the database (do not delete the actual file)
+        $update_query = "UPDATE users SET resume_file = NULL WHERE id = ?";
+        $stmt = $conn->prepare($update_query);
+        $stmt->bind_param("i", $user_id);
+        if ($stmt->execute()) {
+            echo "<div class='alert alert-success'>Resume removed from profile successfully.</div>";
+            echo "<script>window.location.href = 'profile.php?id=$user_id';</script>";
+            exit();
+        } else {
+            echo "<div class='alert alert-danger'>Error removing resume from the database.</div>";
+        }
+    } else {
+        echo "<div class='alert alert-danger'>No resume found to remove.</div>";
+    }
+}
+
+
+
+// Fetch applied jobs for the user
+$query_jobs = "
+    SELECT jobs.title, jobs.category, jobs.location, jobs.id AS job_id 
+    FROM applications 
+    JOIN jobs ON applications.job_id = jobs.id 
+    WHERE applications.user_id = ?
+";
+$stmt = $conn->prepare($query_jobs);
+$stmt->bind_param("i", $user_id);
+$stmt->execute();
+$result_jobs = $stmt->get_result();
+?>
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile | Job Portal</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/JOB/assets/profile.css">
+</head>
+<body>
+<?php $isOwnProfile = ($user_id == $_SESSION['user_id']); // Check if it's the user's own profile ?>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-10 fade-in">
+            <!-- Tab Navigation -->
+            <ul class="nav nav-tabs mb-4" id="profileTabs" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="true">Profile</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="applications-tab" data-bs-toggle="tab" data-bs-target="#applications" type="button" role="tab" aria-controls="applications" aria-selected="false">Applications</button>
+                </li>
+            </ul>
+
+            <!-- Tab Content -->
+            <div class="tab-content" id="profileTabsContent">
+                <!-- Profile Tab -->
+                <div class="tab-pane fade show active" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+                    <!-- Profile Card -->
+                    <div class="profile-card p-4 mb-4">
+                        <div class="text-center">
+                            <div class="profile-picture mb-3" data-bs-toggle="modal" data-bs-target="#profilePictureModal">
+                                <img src="<?php echo $user['uploaded_file'] ? $user['uploaded_file'] : 'default-avatar.png'; ?>" alt="Profile Picture" class="rounded-circle shadow-sm" style="width: 200px; height: 200px; object-fit: cover; border: 4px solid #ddd;">
+                            </div>
+                            <!-- User Name -->
+                            <h2><?php echo htmlspecialchars($user['first_name'] . ' ' . $user['last_name']); ?></h2>
+                            <!-- Caption -->
+                            <p class="text-muted caption-text" id="bio-display">
+                                <?php echo !empty($user['caption']) ? htmlspecialchars($user['caption']) : 'No caption set'; ?>
+                            </p>
+                            <!-- Edit Bio Button -->
+                            <?php if ($isOwnProfile): ?>
+                                <button id="edit-bio-button" class="btn btn-secondary rounded-pill mb-3">Edit Bio</button>
+                            <?php endif; ?>
+                            <!-- Caption Update Form (Hidden Initially) -->
+                            <form action="profile.php?id=<?php echo $user_id; ?>" method="POST" id="bio-form" style="display:none;" class="mb-3">
+                                <textarea name="caption" class="form-control rounded-pill my-3" placeholder="Enter your caption or saying..."><?php echo htmlspecialchars($user['caption']); ?></textarea>
+                                <button type="submit" class="btn btn-primary rounded-pill me-2">Update Caption</button>
+                                <button type="button" id="cancel-bio-button" class="btn btn-secondary rounded-pill">Cancel</button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Personal Information -->
+                    <div class="profile-card p-4 mb-4 fade-in">
+                        <h3 class="section-title">Personal Information</h3>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p><strong>Email:</strong> <?php echo htmlspecialchars($user['email']); ?></p>
+                                <p><strong>Gender:</strong> <?php echo htmlspecialchars($user['gender']); ?></p>
+                                <p><strong>Birth Date:</strong> <?php echo htmlspecialchars($user['birth_date']); ?></p>
+                                <p><strong>Age:</strong> <?php echo htmlspecialchars($user['age']); ?></p>
+                            </div>
+                            <div class="col-md-6">
+                                <p><strong>Civil Status:</strong> <?php echo htmlspecialchars($user['civil_status']); ?></p>
+                                <p><strong>Phone Number:</strong> <?php echo htmlspecialchars($user['phone_number']); ?></p>
+                                <p><strong>Address:</strong> <?php echo htmlspecialchars($user['street_address'] . ', ' . $user['barangay'] . ', ' . $user['city']); ?></p>
+                                <p><strong>Zip Code:</strong> <?php echo htmlspecialchars($user['zip_code']); ?></p>
+                            </div>
+                        </div>
+                    </div>
+
+                                            <!-- Educational Background -->
+                                            <div class="profile-card p-4 mb-4 fade-in">
+                            <h3 class="section-title">Educational Background</h3>
+                            <p><strong>Education Level:</strong> <?php echo htmlspecialchars($user['education_level']); ?></p>
+                            <p><strong>School:</strong> <?php echo htmlspecialchars($user['school_name']); ?></p>
+                            <p><strong>Completion Year:</strong> <?php echo htmlspecialchars($user['completion_year']); ?></p>
+                            <p><strong>Inclusive Years:</strong> <?php echo htmlspecialchars($user['inclusive_years']); ?></p>
+                        </div>
+
+                        <!-- Work Experience -->
+                        <div class="profile-card p-4 mb-4 fade-in">
+                            <h3 class="section-title">Work Experience</h3>
+                            <p class="no-data"><?php echo !empty($user['work_experience']) ? htmlspecialchars($user['work_experience']) : 'No work experience added yet.'; ?></p>
+                        </div>
+
+                        <!-- Skills -->
+                        <div class="profile-card p-4 mb-4 fade-in">
+                            <h3 class="section-title">Skills</h3>
+                            <p class="no-data"><?php echo !empty($user['skills']) ? htmlspecialchars($user['skills']) : 'No skills added yet.'; ?></p>
+                        </div>
+
+                        <!-- LinkedIn Profile -->
+                        <div class="profile-card p-4 mb-4 fade-in">
+                            <h3 class="section-title">LinkedIn Profile</h3>
+                            <p class="no-data">
+                                <?php if (!empty($user['linkedin_profile'])): ?>
+                                    <a href="<?php echo htmlspecialchars($user['linkedin_profile']); ?>" target="_blank" class="btn btn-primary btn-sm rounded-pill"><i class="fab fa-linkedin"></i> View LinkedIn</a>
+                                <?php else: ?>
+                                    No LinkedIn profile added.
+                                <?php endif; ?>
+                            </p>
+                        </div>
+
+                        <!-- Portfolio -->
+                        <div class="profile-card p-4 mb-4 fade-in">
+                            <h3 class="section-title">Portfolio</h3>
+                            <p class="no-data">
+                                <?php if (!empty($user['portfolio_url'])): ?>
+                                    <a href="<?php echo htmlspecialchars($user['portfolio_url']); ?>" target="_blank" class="btn btn-success btn-sm rounded-pill"><i class="fas fa-globe"></i> View Portfolio</a>
+                                <?php else: ?>
+                                    No portfolio added.
+                                <?php endif; ?>
+                            </p>
+                        </div>
+
+                    <!-- Resume Section -->
+                    <div class="profile-card p-4 mb-4 fade-in">
+                        <h3 class="section-title resume-section">Resume</h3>
+                        <p class="no-data">
+                            <?php if (!empty($user['resume_file'])): ?>
+                                <a href="<?php echo htmlspecialchars($user['resume_file']); ?>" target="_blank" class="btn btn-info btn-sm rounded-pill me-2"><i class="fas fa-download"></i> Download Resume</a>
+                                <?php if ($isOwnProfile): ?>
+                                    <button id="remove-resume-button" class="btn btn-danger btn-sm rounded-pill" data-user-id="<?php echo $user_id; ?>"><i class="fas fa-trash"></i> Remove Resume</button>
+                                <?php endif; ?>
+                            <?php else: ?>
+                                No resume uploaded yet.
+                            <?php endif; ?>
+                        </p>
+                        <?php if ($isOwnProfile): ?>
+                            <form action="profile.php?id=<?php echo $user_id; ?>" method="POST" enctype="multipart/form-data" class="mt-3">
+                                <label for="resume" class="form-label fw-bold">Upload/Replace Resume</label>
+                                <input type="file" name="resume" id="resume" class="form-control rounded-pill my-3" accept=".pdf,.doc,.docx">
+                                <button type="submit" class="btn btn-success rounded-pill"><i class="fas fa-upload"></i> Upload/Replace Resume</button>
+                            </form>
+                        <?php endif; ?>
+                    </div>
+                </div>
+
+                <!-- Applications Tab -->
+                <div class="tab-pane fade" id="applications" role="tabpanel" aria-labelledby="applications-tab">
+                    <div class="container mt-4">
+                        <h4 class="text-center mb-4">Your Pending Applications</h4>
+                        <?php if ($isOwnProfile && mysqli_num_rows($result_jobs) > 0): ?>
+                            <div class="job-list">
+                                <?php while ($job = mysqli_fetch_assoc($result_jobs)): ?>
+                                    <div class="job-card mb-3 p-3 shadow-sm rounded">
+                                        <div class="job-header">
+                                            <strong><?php echo htmlspecialchars($job['title']); ?></strong>
+                                        </div>
+                                        <div class="job-details">
+                                            <em><?php echo htmlspecialchars($job['category']); ?></em><br>
+                                            <small><?php echo htmlspecialchars($job['location']); ?></small>
+                                        </div>
+                                        <div class="job-actions">
+                                            <a href="job.php?id=<?php echo $job['job_id']; ?>" class="btn btn-primary btn-sm rounded-pill">View Details</a>
+                                        </div>
+                                    </div>
+                                <?php endwhile; ?>
+                            </div>
+                        <?php elseif (!$isOwnProfile): ?>
+                            <p class="text-center text-muted">You are viewing another user's profile. Applications are hidden.</p>
+                        <?php else: ?>
+                            <p class="text-center text-muted">You have not applied for any jobs yet.</p>
+                        <?php endif; ?>
+                    </div>
+                </div>
+
+                <!-- Edit Profile Button -->
+                <?php if ($isOwnProfile): ?>
+                    <div class="text-center fade-in">
+                        <a href="edit_profile.php" class="btn btn-custom rounded-pill px-4"><i class="fas fa-edit"></i> Edit Profile</a>
+                    </div>
+                <?php endif; ?>
+            </div>
+        </div>
+    </div>
+</div>
+
+                
+
+<!-- Profile Picture Modal -->
+<div class="modal fade" id="profilePictureModal" tabindex="-1" aria-labelledby="profilePictureModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="profilePictureModalLabel">Update Profile Picture</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <!-- Display the upload and remove picture forms only if the logged-in user is the profile owner -->
+                <?php if ($user_id == $_SESSION['user_id']): ?>
+                    <!-- Upload Picture Form -->
+                    <form action="profile.php?id=<?php echo $user_id; ?>" method="POST" enctype="multipart/form-data" class="mb-3">
+                        <div class="mb-3 text-center">
+                            <img src="<?php echo $user['uploaded_file'] ? $user['uploaded_file'] : 'default-avatar.png'; ?>" alt="Profile Picture" class="rounded-circle shadow-sm" style="width: 150px; height: 150px; object-fit: cover; border: 4px solid #ddd;">
+                        </div>
+                        <div class="mb-3">
+                            <label for="profile_pic" class="form-label fw-bold">Upload New Profile Picture</label>
+                            <input type="file" name="profile_pic" id="profile_pic" class="form-control rounded-pill">
+                        </div>
+                        <button type="submit" class="btn btn-success rounded-pill w-100"><i class="fas fa-upload"></i> Upload Picture</button>
+                    </form>
+
+                    <!-- Remove Picture Form -->
+                    <?php if ($user['uploaded_file']): ?>
+                        <form action="profile.php?id=<?php echo $user_id; ?>" method="POST" class="mt-3">
+                            <input type="hidden" name="remove_profile_pic" value="1">
+                            <button type="submit" class="btn btn-danger rounded-pill w-100"><i class="fas fa-trash"></i> Remove Picture</button>
+                        </form>
+                    <?php endif; ?>
+                <?php else: ?>
+                    <!-- If the user is not the profile owner, display a message or leave the modal empty -->
+                    <p class="text-center text-muted">You cannot modify this user's profile picture.</p>
+                <?php endif; ?>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+<script>
+    // Toggle the bio text field and edit button visibility
+    document.getElementById('edit-bio-button').addEventListener('click', function() {
+        document.getElementById('bio-display').style.display = 'none';
+        document.getElementById('bio-form').style.display = 'block';
+        document.getElementById('edit-bio-button').style.display = 'none';
+    });
+
+    // Cancel the bio edit and revert to original state
+    document.getElementById('cancel-bio-button').addEventListener('click', function() {
+        document.getElementById('bio-display').style.display = 'block';
+        document.getElementById('bio-form').style.display = 'none';
+        document.getElementById('edit-bio-button').style.display = 'inline-block';
+    });
+
+    document.getElementById('remove-resume-button')?.addEventListener('click', function () {
+    const userId = this.getAttribute('data-user-id');
+    if (confirm('Are you sure you want to remove your resume? This action cannot be undone.')) {
+        // Submit a POST request to remove the resume
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = `profile.php?id=${userId}`;
+        const input = document.createElement('input');
+        input.type = 'hidden';
+        input.name = 'remove_resume';
+        input.value = '1';
+        form.appendChild(input);
+        document.body.appendChild(form);
+        form.submit();
+    }
+});
+</script>
+
+
+</body>
+</html>
+
+<?php include '../includes/footer.php'; ?>

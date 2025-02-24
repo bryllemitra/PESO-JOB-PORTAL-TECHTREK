@@ -1,0 +1,266 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+
+body {
+    background-color: #f8f9fa;
+}
+
+/* Hide the button when the Applications Tab is active */
+body[data-tab="applications"] #edit-profile-button {
+    display: none;
+}
+
+.profile-card {
+    background: #fff;
+    border-radius: 15px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease-in-out;
+}
+.profile-card:hover {
+    transform: translateY(-10px);
+}
+
+.profile-picture img {
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+    border: 4px solid #ddd;
+    border-radius: 50%;
+    transition: border-color 0.3s ease-in-out;
+}
+.profile-picture img:hover {
+    border-color: #0d6efd;
+}
+
+.section-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color:#0d6efd;
+    margin-bottom: 1rem;
+}
+
+.btn-custom {
+    margin-top:10px;
+    background-color: rgb(30, 58, 138);
+    border: none;
+    transition: background-color 0.3s ease-in-out;
+    color:white;
+}
+.btn-custom:hover {
+    background-color: #0954c5;
+    color:white;
+}
+
+.btn-light {
+    background-color: rgb(229, 231, 235)
+}
+
+.resume-section {
+    border-left: 4px solid #0d6efd;
+    padding-left: 1rem;
+}
+
+.no-data {
+    font-style: italic;
+    color: #888;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+.fade-in {
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+/* Prevent overflow and hiding content */
+.tab-content {
+    overflow: hidden;
+}
+
+/* Ensure Profile Tab stops at the edit button */
+.tab-pane#profile {
+    max-height: 75vh; /* Limit the height to 90% of the viewport */
+    overflow-y: auto; /* Allow scrolling if content exceeds this height */
+}
+
+/* Prevent the applications tab content from spilling into profile */
+.tab-pane {
+    display: none; /* Hide tab content when it's not active */
+}
+
+.tab-pane.active {
+    display: block; /* Show the active tab content */
+}
+
+/* Clear floating elements in profile section */
+.profile-card::after {
+    content: "";
+    display: block;
+    clear: both;
+}
+
+/* Ensure space is cleared below profile section when applications are shown */
+body[data-tab="applications"] .tab-pane#profile {
+    padding-bottom: 0;
+}
+
+/* Ensure the Applications Tab is scrollable */
+.tab-pane#applications {
+    max-height: 75vh; /* Limit the height to 90% of the viewport */
+    overflow-y: auto; /* Allow vertical scrolling if content exceeds this height */
+    padding-right: 15px; /* Ensure content doesn't touch the scrollbar */
+    max-width: 113vh;
+}
+
+/* Job Card Styling */
+.job-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.job-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+}
+
+
+
+/* Icons Styling */
+.fa-briefcase,
+.fa-map-marker-alt,
+.fa-clock,
+.fa-file-alt,
+.fa-calendar-check {
+    color: #6c757d;
+}
+
+/* Button Styling */
+.btn-primary {
+    background-color: #007bff;
+    border: none;
+}
+.btn-primary:hover {
+    background-color: #0365ce;
+}
+
+/* Centered No Data Message */
+.text-center.text-muted {
+    font-size: 1.2rem;
+    margin-top: 2rem;
+}
+
+
+
+.btn:hover {
+    transform: translateY(-2px); /* Slight hover effect */
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+}
+
+.btn:active {
+    transform: translateY(0); /* Reset on click */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Common Button Styles */
+.btn {
+    font-size: 0.8rem;
+    padding: 0.5rem 1.5rem;
+    border: none;
+    border-radius: 15px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+}
+
+/* Download Resume Button */
+.btn-download-resume:hover {
+    border-color: #4c6ef5;
+    color: #4c6ef5;
+}
+
+/* View Resume Button */
+.btn-view-resume:hover {
+    border-color: #28a745;
+    color: #28a745;
+}
+
+/* Remove Resume Button */
+.btn-remove-resume:hover {
+    border-color: #dc3545;
+    color: #dc3545;
+}
+
+/* Upload/Replace Resume Button */
+.btn-upload-resume:hover {
+    border-color: #fd7e14;
+    color: #fd7e14;
+}
+
+/* Create Resume Button */
+.btn-create-resume:hover {
+    border-color: #17a2b8;
+    color: #17a2b8;
+}
+
+/* Hover Effects */
+.btn:hover {
+    transform: translateY(-2px);
+}
+
+
+/* Icon Styling */
+.btn i {
+    margin-right: 0.5rem;
+}
+
+/* Cover Photo Container */
+.cover-photo-container {
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Edit Cover Photo Button */
+.cover-photo-container .btn {
+    background-color: rgba(255, 255, 255, 0.8);
+    border: 1px solid #ddd;
+    color: #333;
+}
+
+.cover-photo-container .btn:hover {
+    background-color: #fff;
+    color: #0d6efd;
+}
+
+/* Profile Picture Overlap */
+.profile-picture {
+    z-index: 1;
+    position: relative;
+}
+
+/* Default Tab Style */
+.nav-tabs .nav-link {
+    color: #333; /* Default text color */
+    border: none;
+
+}
+
+/* Hover Effect */
+.nav-tabs .nav-link:hover {
+    color: #007bff; /* Turns blue on hover */
+}
+
+/* Active Tab Style */
+.nav-tabs .nav-link.active {
+    color: #007bff !important; /* Blue text for active tab */
+    font-weight: bold; /* Makes active tab stand out */
+    border-bottom: 2px solid #007bff; /* Adds an underline effect */
+}

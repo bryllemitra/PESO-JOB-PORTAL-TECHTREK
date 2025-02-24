@@ -1,0 +1,539 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+
+/* Futuristic Header Styles */
+.custom-header {
+    background: linear-gradient(120deg, #1e3c72 0%, #2a5298 100%);
+    color: rgb(0, 0, 0);
+    border-bottom: 2px solid #ffffff30;
+    position: fixed;
+    width: 100%;
+    z-index: 1000;
+    height: 60px; /* Explicitly define the height of the header */
+}
+
+.navbar-brand img {
+    transition: transform 0.3s ease-in-out;
+}
+
+.navbar-brand:hover img {
+    transform: scale(1.1);
+}
+
+.brand-text {
+    font-size: 25px;
+    color:red;
+    font-family: 'Roboto', sans-serif;
+    letter-spacing: 2px;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.281);
+}
+
+.nav-link {
+    position: relative;
+    color: rgb(0, 0, 0) !important;
+    font-weight: 500;
+    transition: all 0.3s ease-in-out;
+    
+}
+
+.custom-header-container .nav-link {
+    position: relative;
+    color: white !important;
+    font-weight: 500;
+    transition: all 0.3s ease-in-out;
+}
+
+.nav-link::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: -5px;
+    left: 0;
+    background: #ffffff;
+    transition: width 0.3s ease-in-out;
+}
+
+.nav-link:hover::after {
+    width: 100%;
+}
+
+/* styles.css */
+.nav-link.custom-active {
+    color: #ff5733 !important; /* Red color for active link */
+    font-weight: bold;
+    
+}
+
+.custom-header-container .active {
+    color: #ffcc00 !important;
+    font-weight: bold;
+}
+
+
+
+.custom-header-container .dropdown-menu {
+    background: linear-gradient(120deg, #1e3c72 0%, #2a5298 100%);
+    border: none;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.custom-header-container .dropdown-item {
+    color: white !important;
+    transition: all 0.3s ease-in-out;
+}
+
+.custom-header-container .dropdown-item:hover {
+    background: #ffcc00;
+    color: #1e3c72 !important;
+}
+
+.custom-header-container .badge {
+    animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(255, 204, 0, 0.7);
+    }
+    70% {
+        transform: scale(1.3);
+        box-shadow: 0 0 0 10px rgba(255, 204, 0, 0);
+    }
+    100% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(255, 204, 0, 0);
+    }
+}
+
+/* Responsive Styles */
+@media (max-width: 991.98px) {
+    /* Left Dropdown */
+    .custom-header-container #navbarNav {
+        position: absolute;
+        top: 60px;
+        left: 0;
+        width: auto;
+        background: linear-gradient(120deg, #1e3c72 0%, #2a5298 100%);
+        z-index: 1000;
+        padding: 10px;
+        border-radius: 0 0 10px 10px;
+    }
+
+    /* Right Dropdown */
+    .custom-header-container #rightNav {
+        position: absolute;
+        top: 60px;
+        right: 0;
+        width: auto;
+        background: linear-gradient(120deg, #1e3c72 0%, #2a5298 100%);
+        z-index: 1000;
+        padding: 10px;
+        border-radius: 0 0 10px 10px;
+    }
+
+    .custom-header-container .navbar-toggler {
+        margin-left: auto;
+    }
+}
+
+
+
+/* Ensure content is not hidden behind the fixed header */
+body {
+    padding-top: 60px; /* Matches the height of the fixed header */
+}
+
+@media (max-width: 991.98px) {
+    body {
+        padding-top: 70px; /* Slightly more padding for smaller screens if needed */
+    }
+}
+
+
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(255, 204, 0, 0.7);
+    }
+    70% {
+        transform: scale(1.3);
+        box-shadow: 0 0 0 10px rgba(255, 204, 0, 0);
+    }
+    100% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(255, 204, 0, 0);
+    }
+}
+
+/* Responsive Styles */
+@media (max-width: 991.98px) {
+    /* Left Dropdown */
+    .custom-header-container #navbarNav {
+        position: absolute;
+        top: 60px;
+        left: 0;
+        width: auto;
+        background: linear-gradient(120deg, #1e3c72 0%, #2a5298 100%);
+        z-index: 1000;
+        padding: 10px;
+        border-radius: 0 0 10px 10px;
+    }
+
+    /* Right Dropdown */
+    .custom-header-container #rightNav {
+        position: absolute;
+        top: 60px;
+        right: 0;
+        width: auto;
+        background: linear-gradient(120deg, #1e3c72 0%, #2a5298 100%);
+        z-index: 1000;
+        padding: 10px;
+        border-radius: 0 0 10px 10px;
+    }
+
+    .custom-header-container .navbar-toggler {
+        margin-left: auto;
+    }
+}
+
+
+
+.custom-header-container .show.animated-dropdown {
+    transform: translateX(0); /* Slide into view */
+    opacity: 1; /* Make visible */
+}
+
+.custom-header-container .dropdown-menu-end.animated-dropdown {
+    position: absolute;
+    top: 100%; /* Position below the bell icon */
+    right: 0; /* Align with the right edge of the bell icon */
+    min-width: 300px; /* Set a minimum width for the dropdown */
+    max-height: 300px; /* Limit height for scrolling */
+    overflow-y: auto; /* Enable vertical scrolling if needed */
+    background: white; /* White background for better visibility */
+    border-radius: 10px; /* Rounded corners for a modern look */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* Subtle shadow for depth */
+}
+
+
+
+/* Hover Scale Effect */
+.hover-scale:hover {
+    transform: scale(1.05);
+    transition: transform 0.2s ease-in-out;
+}
+
+/* Pagination Button Styling */
+.pagination-btn {
+    font-size: 0.8rem; /* Smaller font size for pagination buttons */
+    padding: 0.25rem 0.75rem; /* Compact padding */
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    color: #333;
+    background-color: #ffffff;
+    transition: all 0.3s ease-in-out;
+}
+
+.pagination-btn:hover {
+    background-color: #f8f9fa;
+    color: #007bff;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle glow on hover */
+}
+
+/* Animation Classes */
+.animate__animated {
+    animation-duration: 0.5s;
+}
+
+.animate__fadeIn {
+    animation-name: fadeIn;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+
+
+/* Message Container */
+.message-container {
+    flex-grow: 1; /* Allow the message container to expand and fill available space */
+    white-space: normal; /* Allow text wrapping */
+    word-wrap: break-word; /* Break long words to prevent overflow */
+    padding-right: 10px; /* Add spacing between the message and buttons */
+}
+
+/* Action Dropdown */
+.action-dropdown {
+    position: relative;
+}
+
+
+
+.action-dropdown .btn {
+    padding: 0.25rem 0.5rem; /* Compact padding for the triple-dot button */
+    font-size: 0.8rem; /* Smaller font size */
+    line-height: 1; /* Adjust line height for better spacing */
+    transition: transform 0.2s ease-in-out;
+}
+
+.action-dropdown .btn:hover {
+    transform: scale(1.1); /* Slight zoom effect on hover */
+}
+
+/* Action Dropdown Menu */
+.action-dropdown .dropdown-menu {
+    min-width: 150px; /* Set a minimum width for the dropdown menu */
+    border-radius: 10px; /* Rounded corners */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+}
+
+.action-dropdown .dropdown-item {
+    font-size: 0.9rem; /* Smaller font size for dropdown items */
+    padding: 0.5rem 1rem; /* Compact padding */
+    display: flex;
+    align-items: center;
+}
+
+.action-dropdown .dropdown-item i {
+    margin-right: 0.5rem; /* Add spacing between icon and text */
+}
+
+/* Dropdown Container */
+#notification-dropdown {
+    max-height: 550px; /* Fixed height for the dropdown */
+    overflow-y: auto; /* Vertical scrolling */
+    width: auto; /* Auto-adjust width based on content */
+    min-width: 440px; /* Minimum width for readability */
+    max-width: 600px; /* Optional: Maximum width to prevent excessive expansion */
+    border-radius: 10px; /* Rounded corners */
+}
+
+/* Scrollbar Styling (Optional for a modern look) */
+#notification-dropdown::-webkit-scrollbar {
+    width: 8px; /* Width of the scrollbar */
+}
+
+#notification-dropdown::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.2); /* Color of the scrollbar thumb */
+    border-radius: 10px; /* Rounded scrollbar thumb */
+}
+
+#notification-dropdown::-webkit-scrollbar-track {
+    background-color: transparent; /* Transparent scrollbar track */
+}
+
+/* Dropdown Header Styling */
+.dropdown-header {
+    font-size: 1rem; /* Slightly larger font size for the header */
+    padding: 10px; /* Add padding for spacing */
+    background-color: #f8f9fa; /* Light background color for the header */
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1); /* Subtle border below the header */
+}
+
+/* Loading Message Styling */
+#notification-list .dropdown-item {
+    min-height: 100px; /* Ensure the loading message takes up some space */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Dismiss All Button Styling */
+#dismiss-all-notifications {
+    font-size: 0.8rem; /* Smaller font size for the button */
+    padding: 0.375rem 0.75rem; /* Compact padding */
+    margin: 10px 0; /* Add margin for spacing */
+}
+
+/* Notification Container Height */
+.notification-container {
+    max-height: 400px; /* Adjust the height as needed */
+    overflow-y: auto; /* Enable vertical scrolling if content overflows */
+    border: 1px solid rgba(0, 0, 0, 0.1); /* Optional: Add a border for definition */
+    border-radius: 10px; /* Rounded corners for the container */
+    padding: 10px; /* Padding inside the container */
+}
+
+/* General Notification Styling */
+.bg-gradient-light {
+    background: linear-gradient(135deg, #f8f9fa, #e9ecef); /* Subtle gradient for unread notifications */
+    border: 1px solid rgba(0, 0, 0, 0.1); /* Light border for definition */
+}
+
+.text-muted.bg-light {
+    background-color: #ffffff !important; /* Clean white background for read notifications */
+    color: #6c757d !important;
+    border: 1px solid rgba(0, 0, 0, 0.1); /* Light border for definition */
+}
+
+.shadow-sm {
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05); /* Soft shadow for depth */
+}
+
+/* Font Size Adjustments */
+.notification-message {
+    font-size: 0.9rem; /* Slightly smaller font size for messages */
+}
+
+.notification-timestamp {
+    font-size: 0.8rem; /* Even smaller font size for timestamps */
+}
+
+
+
+/* General Button Styles (on profile.php or elsewhere) */
+.btn {
+    font-size: 0.8rem;
+    padding: 0.6rem 1.5rem;
+    border: none;
+    border-radius: 15px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+}
+
+/* Updated Notification Button Styles */
+.notification-btn-outline-secondary.notification-view-btn, 
+.notification-btn-outline-danger.notification-delete-btn {
+    font-size: 0.8rem; /* Smaller font size for buttons */
+    padding: 0.25rem 0.5rem; /* Reduced padding for compact buttons */
+    line-height: 1.2; /* Adjust line height for better spacing */
+    transition: all 0.3s ease-in-out;
+}
+
+/* Override .btn Styles for Notification Buttons */
+.notification-view-btn, .notification-delete-btn {
+    font-size: 0.8rem !important; /* Ensure the size doesn't get overridden */
+    padding: 0.25rem 0.5rem !important; /* Make sure padding is as intended */
+    border-radius: 5px !important; /* Ensure proper border radius */
+    text-transform: none; /* Prevent uppercase transformation */
+    font-weight: normal; /* Reset weight if needed */
+}
+
+/* Hover States for Notification Buttons */
+.notification-btn-outline-secondary.notification-view-btn:hover {
+    background-color: #f8f9fa;
+    color: #007bff;
+}
+
+.notification-btn-outline-danger.notification-delete-btn:hover {
+    background-color: #f8d7da;
+    color: #dc3545;
+}
+
+
+/* Notification Dropdown Animation */
+.custom-header-container .animated-dropdown {
+    transform: translateX(100%); /* Start off-screen to the right */
+    transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out; /* Smooth sliding and fading */
+    opacity: 0; /* Start invisible */
+}
+
+/* Notification Dropdown Styles */
+.custom-header-container .notification-scroll {
+    background: white;
+    color: #333;
+    max-width: 700px;
+    max-height: 500px;
+    overflow-y: auto;
+}
+
+.custom-header-container .notification-scroll::-webkit-scrollbar {
+    width: 8px;
+}
+
+.custom-header-container .notification-scroll::-webkit-scrollbar-thumb {
+    background: #ccc;
+    border-radius: 10px;
+}
+
+.custom-header-container .dropdown-item:hover {
+    background-color: #f9f9f9;
+}
+
+.custom-header-container .text-primary.fw-bold {
+    color: #0d6efd !important;
+    font-weight: bold;
+}
+
+.custom-header-container .text-black {
+    color: #333 !important;
+}
+
+.custom-header-container .dismiss-notification {
+    font-size: 1rem;
+    color: #aaa;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.custom-header-container .dismiss-notification:hover {
+    color: #ff4d4d;
+}
+
+/* Responsive Styles */
+@media (max-width: 991.98px) {
+    .custom-header-container .notification-scroll {
+        max-width: 100%;
+        overflow-x: auto;
+    }
+}
+
+.custom-header-container .notification-icon,
+.custom-header-container .message-icon {
+    font-size: 1.5em;
+    transition: transform 0.3s ease-in-out;
+}
+
+.custom-header-container .notification-icon:hover,
+.custom-header-container .message-icon:hover {
+    transform: scale(1.2);
+}
+  
+
+/* Base Style for Icon-only Buttons */
+.notification-icon-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9rem;  /* Adjust icon size */
+    padding: 8px;  /* Add space around the icons */
+    border-radius: 50%;  /* Circular shape */
+    transition: all 0.3s ease; /* Smooth transition on hover */
+    color: #495057; /* Default icon color */
+    background-color: transparent; /* No background */
+    border: none; /* No border */
+    text-decoration: none;
+}
+
+/* View Icon Style */
+.notification-icon-btn.view-notification {
+    color: #495057; /* Default color for the view icon */
+}
+
+.notification-icon-btn.view-notification:hover {
+    color: #0056b3; /* Change color to blue on hover */
+}
+
+/* Delete Icon Style */
+.notification-icon-btn.delete-notification {
+    color: #721c24; /* Default color for the delete icon */
+}
+
+.notification-icon-btn.delete-notification:hover {
+    color: #dc3545; /* Change color to red on hover */
+}

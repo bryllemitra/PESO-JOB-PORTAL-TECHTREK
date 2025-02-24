@@ -1,0 +1,146 @@
+/* General Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f5f7fa; /* Light grayish-blue background */
+    color: #333; /* Dark text for readability */
+    line-height: 1.6;
+    padding: 20px;
+    margin-top: 50px;
+}
+
+.container {
+    
+    max-width: 800px;
+    margin: 0 auto;
+    background: #ffffff; /* White container */
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08); /* Subtle shadow for depth */
+}
+
+h1 {
+    text-align: center;
+    color: #1a202c; /* Dark gray for headings */
+    margin-bottom: 20px;
+    font-size: 2rem;
+    font-weight: 600;
+}
+
+.error {
+    background: #fff3cd; /* Soft yellow for error messages */
+    color: #856404; /* Dark yellow text */
+    padding: 15px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    border: 1px solid #ffeeba;
+}
+
+.error ul {
+    list-style-type: none;
+}
+
+.error li {
+    margin-bottom: 5px;
+}
+
+.collapsible-section {
+    margin-bottom: 20px;
+    border: 1px solid #e2e8f0; /* Light border for sections */
+    border-radius: 8px;
+    overflow: hidden;
+    background: #f9fafb; /* Slightly off-white background */
+}
+
+.section-header {
+    background: #edf2f7; /* Light blue-gray background */
+    color: #2d3748; /* Dark gray text */
+    padding: 15px;
+    cursor: pointer;
+    font-size: 1.1rem;
+    font-weight: 600;
+    transition: background 0.3s ease;
+}
+
+.section-header:hover {
+    background: #e2e8f0; /* Slightly darker on hover */
+}
+
+.section-content {
+    padding: 20px;
+    display: none; /* Initially hidden */
+}
+
+.section-content.active {
+    display: block; /* Show when active */
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+}
+
+label {
+    font-weight: bold;
+    margin-bottom: 5px;
+    display: block;
+    color: #4a5568; /* Medium gray for labels */
+}
+
+input[type="text"],
+input[type="email"],
+input[type="number"],
+input[type="date"],
+select,
+textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #cbd5e0; /* Light gray border */
+    border-radius: 5px;
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+    background: #fff; /* Pure white background for inputs */
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+    border-color: #4299e1; /* Blue accent for focus */
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(66, 153, 225, 0.2); /* Subtle glow effect */
+}
+
+textarea {
+    resize: vertical;
+    min-height: 80px;
+}
+
+button {
+    display: block;
+    width: 100%;
+    padding: 15px;
+    background: #4299e1; /* Professional blue */
+    color: #fff;
+    font-size: 1.1rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    margin-top: 20px;
+}
+
+button:hover {
+    background: #3182ce; /* Darker blue on hover */
+}
+
+.placeholder {
+    font-size: 0.9rem;
+    color: #718096; /* Light gray for placeholders */
+    margin-bottom: 10px;
+}

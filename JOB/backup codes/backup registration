@@ -1,0 +1,351 @@
+<?php
+session_start();
+include '../includes/config.php';
+
+// Generate a CSRF token if it doesn't exist
+if (empty($_SESSION['csrf_token'])) {
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+}
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Verify CSRF token
+    if (empty($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+        die('Invalid CSRF token');
+    }
+
+    // Collecting and sanitizing the POST data
+    $username = trim(htmlspecialchars($_POST['username']));
+    $email = trim(htmlspecialchars($_POST['email']));
+    $password = trim(htmlspecialchars($_POST['password']));
+    $first_name = trim(htmlspecialchars($_POST['first_name']));
+    $middle_name = trim(htmlspecialchars($_POST['middle_name']));
+    $last_name = trim(htmlspecialchars($_POST['last_name']));
+    $ext_name = trim(htmlspecialchars($_POST['ext_name']));
+    $gender = trim(htmlspecialchars($_POST['gender']));
+    $birth_date = $_POST['birth_date'];
+    $age = $_POST['age'];
+    $phone_number = trim(htmlspecialchars($_POST['phone_number']));
+    $place_of_birth = trim(htmlspecialchars($_POST['place_of_birth']));
+    $civil_status = trim(htmlspecialchars($_POST['civil_status']));
+    $other_data = trim(htmlspecialchars($_POST['other_data']));
+    $zip_code = trim(htmlspecialchars($_POST['zip_code']));
+    $street_address = trim(htmlspecialchars($_POST['street_address']));
+    $barangay = trim(htmlspecialchars($_POST['barangay']));
+    $city = trim(htmlspecialchars($_POST['city']));
+    $education_level = trim(htmlspecialchars($_POST['education_level']));
+    $completion_year = $_POST['completion_year'];
+    $school_name = trim(htmlspecialchars($_POST['school_name']));
+    $inclusive_years = trim(htmlspecialchars($_POST['inclusive_years']));
+
+    // Validation checks
+    $error = '';
+    if (empty($username) || empty($email) || empty($password) || empty($first_name) || empty($last_name) || empty($gender) || empty($age) || empty($phone_number) || empty($place_of_birth) || empty($civil_status) || empty($zip_code) || empty($street_address) || empty($barangay) || empty($city) || empty($education_level) || empty($completion_year) || empty($school_name)) {
+        $error = "Please fill in all required fields.";
+    }
+
+    // Password length validation
+    if (strlen($password) < 8) {
+        $error = "Password must be at least 8 characters long.";
+    }
+
+    // Email validation
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $error = "Invalid email format.";
+    }
+
+    // Check if there's an error before proceeding
+    if (!empty($error)) {
+        echo "<p class='error'>$error</p>";
+    } else {
+        // Check if username or email already exists (SQL injection safe)
+        $stmt = $conn->prepare("SELECT id FROM users WHERE username = ? OR email = ?");
+        $stmt->bind_param("ss", $username, $email);
+        $stmt->execute();
+        $stmt->store_result();
+
+        if ($stmt->num_rows > 0) {
+            $error = "Username or email already taken!";
+        } else {
+            // Hash the password securely
+            $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
+
+            // Insert user data into the users table (id column is auto-increment)
+            $stmt = $conn->prepare("INSERT INTO users 
+            (email, password, username, first_name, middle_name, last_name, ext_name, gender, birth_date, age, phone_number, place_of_birth, civil_status, other_data, zip_code, street_address, barangay, city, education_level, completion_year, school_name, inclusive_years, uploaded_file) 
+            VALUES 
+            (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+
+            // Adjust the number of placeholders to match the number of values
+            $stmt->bind_param("sssssssssiissssssssssss", 
+                $email, 
+                $hashedPassword, 
+                $username, 
+                $first_name, 
+                $middle_name, 
+                $last_name, 
+                $ext_name, 
+                $gender, 
+                $birth_date, 
+                $age, 
+                $phone_number, 
+                $place_of_birth, 
+                $civil_status, 
+                $other_data, 
+                $zip_code, 
+                $street_address, 
+                $barangay, 
+                $city, 
+                $education_level, 
+                $completion_year, 
+                $school_name, 
+                $inclusive_years, 
+                $uploaded_file // If no file was uploaded, this will be NULL
+            );
+
+            // Execute the statement and check for success
+            if ($stmt->execute()) {
+                // Set success message in session
+                $_SESSION['success'] = "Registration successful! You can now log in.";
+                header("Location: login.php");
+                exit();
+            } else {
+                $error = "Registration failed!";
+            }
+        }
+    }
+}
+?>
+
+
+
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+    <link rel="stylesheet" href="/JOB/assets/register.css">
+</head>
+<body>
+    <div class="form-container">
+        <h2>Register</h2>
+        <?php if (!empty($error)) echo "<p class='error'>$error</p>"; ?>
+        <form method="POST" enctype="multipart/form-data" onsubmit="return validateForm()">
+    <!-- CSRF Token Field -->
+    <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
+            <!-- Step 1: User info (Username, Email, Password) -->
+            <div id="step-1">
+                <label>Username:</label>
+                <input type="text" name="username" required>
+                <label>Email:</label>
+                <input type="email" name="email" required>
+                <label>Password:</label>
+                <input type="password" name="password" required>
+                <button type="button" onclick="nextStep(2)">Next Step</button>
+            </div>
+
+            <!-- Step 2: Personal Information -->
+            <div id="step-2" style="display:none;">
+                <div class="form-row">
+                    <div>
+                        <label>First Name:</label>
+                        <input type="text" name="first_name" required>
+                    </div>
+                    <div>
+                        <label>Middle Name:</label>
+                        <input type="text" name="middle_name">
+                    </div>
+                    <div>
+                        <label>Last Name:</label>
+                        <input type="text" name="last_name" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div>
+                        <label>Extension Name (if any):</label>
+                        <input type="text" name="ext_name">
+                    </div>
+                    <div>
+                        <label>Gender:</label>
+                        <select name="gender" required>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label>Birth Date:</label>
+                        <input type="date" name="birth_date" onchange="calculateAge()" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div>
+                        <label>Age:</label>
+                        <input type="number" name="age" required onchange="syncBirthDate()">
+                    </div>
+                    <div>
+                        <label>Phone Number:</label>
+                        <input type="text" name="phone_number" required>
+                    </div>
+                    <div>
+                        <label>Place of Birth:</label>
+                        <input type="text" name="place_of_birth" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div>
+                        <label>Civil Status:</label>
+                        <select name="civil_status" required>
+                            <option value="Single">Single</option>
+                            <option value="Married">Married</option>
+                            <option value="Divorced">Divorced</option>
+                            <option value="Widowed">Widowed</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label>Other Information(optional):</label>
+                        <textarea name="other_data"></textarea>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div>
+                        <label>Zip Code:</label>
+                        <input type="text" name="zip_code" required>
+                    </div>
+                    <div>
+                        <label>Street Address:</label>
+                        <input type="text" name="street_address" required>
+                    </div>
+                    <div>
+                        <label>Barangay:</label>
+                        <input type="text" name="barangay" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div>
+                        <label>City:</label>
+                        <input type="text" name="city" required>
+                    </div>
+                    <div>
+                        <label>Education Level:</label>
+                        <input type="text" name="education_level" required>
+                    </div>
+                    <div>
+                        <label>Completion Year:</label>
+                        <input type="number" name="completion_year" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div>
+                        <label>School Name:</label>
+                        <input type="text" name="school_name" required>
+                    </div>
+                    <div>
+                        <label>Inclusive Years:</label>
+                        <input type="text" name="inclusive_years" required>
+                    </div>
+                </div>
+
+                <button type="button" onclick="previousStep(2)">Previous Step</button>
+                <button type="button" onclick="nextStep(3)">Next Step</button>
+            </div>
+
+            <!-- Step 3: File Upload -->
+            <div id="step-3" style="display:none;">
+                <label>Upload File (optional):</label>
+                <input type="file" name="uploaded_file">
+                <button type="submit">Submit Registration</button>
+            </div>
+        </form>
+        <p>Already have an account? <a href="login.php">Sign in here</a></p>
+    </div>
+
+    <script>
+        function nextStep(step) {
+            const currentStep = document.querySelector('#step-' + (step - 1));
+            const inputs = currentStep.querySelectorAll('input[required], select[required], textarea[required]');
+            let valid = true;
+
+            // Check if required inputs are filled
+            inputs.forEach(input => {
+                if (input.value.trim() === '') {
+                    valid = false;
+                    input.style.borderColor = 'red'; // Highlight empty fields
+                } else {
+                    input.style.borderColor = ''; // Reset if filled
+                }
+            });
+
+            // Validate phone number and email format on the current step
+            const phoneInput = currentStep.querySelector('input[name="phone_number"]');
+            const emailInput = currentStep.querySelector('input[name="email"]');
+
+            // Phone number validation (must be 11 digits)
+            if (phoneInput && !/^\d{11}$/.test(phoneInput.value)) {
+                valid = false;
+                phoneInput.style.borderColor = 'red'; // Highlight invalid phone number
+                alert('Phone number must be exactly 11 digits!');
+            }
+
+            // Email validation (must be a valid email format)
+            if (emailInput && !/\S+@\S+\.\S+/.test(emailInput.value)) {
+                valid = false;
+                emailInput.style.borderColor = 'red'; // Highlight invalid email
+                alert('Please enter a valid email address!');
+            }
+
+            if (valid) {
+                currentStep.style.display = 'none';
+                document.querySelector('#step-' + step).style.display = 'block';
+            } else {
+                alert('Please fill in all required fields correctly before proceeding.');
+            }
+        }
+
+        function previousStep(step) {
+            const currentStep = document.querySelector('#step-' + step);
+            const previousStep = document.querySelector('#step-' + (step - 1));
+
+            if (currentStep && previousStep) {
+                currentStep.style.display = 'none';
+                previousStep.style.display = 'block';
+            } else {
+                console.error('Steps not found.');
+            }
+        }
+
+        // Calculate age based on birth date
+        function calculateAge() {
+            const birthDate = document.querySelector('input[name="birth_date"]').value;
+            const birthYear = new Date(birthDate).getFullYear();
+            const currentYear = new Date().getFullYear();
+            const ageInput = document.querySelector('input[name="age"]');
+            ageInput.value = currentYear - birthYear;
+        }
+
+        // Sync age field when birth date changes
+        function syncBirthDate() {
+            const ageInput = document.querySelector('input[name="age"]');
+            const age = ageInput.value;
+            const birthDateInput = document.querySelector('input[name="birth_date"]');
+            const currentYear = new Date().getFullYear();
+            const birthYear = currentYear - age;
+            birthDateInput.value = `${birthYear}-01-01`; // Set to Jan 1st of the calculated year
+        }
+
+        function validateForm() {
+            return true; // If validation passes
+        }
+    </script>
+</body>
+</html>

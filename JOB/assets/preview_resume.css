@@ -1,0 +1,129 @@
+/* General Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f5f7fa; /* Light grayish-blue background */
+    color: #333; /* Dark text for readability */
+    line-height: 1.6;
+    padding: 20px;
+}
+
+.resume-container {
+    max-width: 800px;
+    margin: 0 auto;
+    background: #ffffff; /* White container */
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08); /* Subtle shadow for depth */
+}
+
+.header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.header h1 {
+    font-size: 2rem;
+    font-weight: 600;
+    color: #1a202c; /* Dark gray for headings */
+    margin-bottom: 10px;
+}
+
+.header p {
+    font-size: 1.1rem;
+    color: #4a5568; /* Medium gray for subheadings */
+}
+
+.contact-info {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.contact-info span {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.9rem;
+    color: #4a5568; /* Medium gray for contact details */
+}
+
+.contact-info svg {
+    width: 18px;
+    height: 18px;
+    fill: #4299e1; /* Professional blue for icons */
+}
+
+.section {
+    margin-bottom: 20px;
+}
+
+.section-title {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #1a202c; /* Dark gray for section titles */
+    margin-bottom: 10px;
+    border-bottom: 2px solid #e2e8f0; /* Light border for section titles */
+    padding-bottom: 5px;
+}
+
+.section p {
+    margin-bottom: 10px;
+    font-size: 0.95rem;
+    color: #4a5568; /* Medium gray for content */
+}
+
+.skills-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.skill {
+    background: #edf2f7; /* Light blue-gray background */
+    color: #2d3748; /* Dark gray text */
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 0.9rem;
+}
+
+.action-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.back-button,
+.download-button {
+    padding: 10px 20px;
+    font-size: 1rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.back-button {
+    background: #cbd5e0; /* Light gray for back button */
+    color: #2d3748; /* Dark gray text */
+}
+
+.back-button:hover {
+    background: #a0aec0; /* Slightly darker gray on hover */
+}
+
+.download-button {
+    background: #4299e1; /* Professional blue for download button */
+    color: #fff; /* White text */
+}
+
+.download-button:hover {
+    background: #3182ce; /* Darker blue on hover */
+}

@@ -1,0 +1,18 @@
+/* Flexbox Layout for Sticky Footer */
+html, body {
+    height: 100%; /* Ensure the body takes up the full height of the viewport */
+    margin: 0; /* Remove default margin */
+}
+
+body {
+    display: flex;
+    flex-direction: column; /* Stack content vertically */
+}
+
+main {
+    flex: 1; /* Allow the main content to grow and push the footer to the bottom */
+}
+
+.site-footer {
+    flex-shrink: 0; /* Prevent the footer from shrinking */
+}

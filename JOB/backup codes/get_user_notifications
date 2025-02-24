@@ -1,0 +1,37 @@
+<?php
+session_start();
+include '../includes/config.php';
+
+// Make sure the user is logged in and has the correct role
+if ($_SESSION['role'] === 'user') {
+    $userId = $_SESSION['user_id']; // Get user ID from session
+
+    // Query to fetch notifications for the user, based on status changes
+    $query = "
+        SELECT a.id, u.first_name, u.last_name, j.title, a.status, a.status_updated_at, j.id AS job_id, a.is_read
+        FROM applications a
+        JOIN users u ON a.user_id = u.id
+        JOIN jobs j ON a.job_id = j.id
+        WHERE a.user_id = '$userId' AND a.status IN ('accepted', 'rejected')
+        ORDER BY a.status_updated_at DESC"; // Order by the most recent status update
+
+    $result = mysqli_query($conn, $query);
+
+    // Initialize an array to hold notifications
+    $notifications = [];
+    
+    // Fetch the notifications from the database
+    while ($row = mysqli_fetch_assoc($result)) {
+        $notifications[] = [
+            'id' => $row['id'],
+            'message' => "Your application for the job '{$row['title']}' has been {$row['status']}.",
+            'timestamp' => date("M d, Y h:i A", strtotime($row['status_updated_at'])),
+            'url' => "../user/view_application.php?job_id={$row['job_id']}", // Redirect to the specific job application
+            'is_read' => (bool)$row['is_read']
+        ];
+    }
+
+    // Return notifications as JSON
+    echo json_encode($notifications);
+}
+?>

@@ -1,0 +1,466 @@
+        /* General Styles */
+
+
+/* Header Section */
+.header {
+    position: relative;
+    height: 500px; /* Fixed height for larger screens */
+    background-image: url('/JOB/uploads/pesocover.jpg'); /* Cover photo */
+    background-size: cover; /* Ensures the image covers the entire container */
+    background-position: center; /* Centers the image */
+    color: white;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Adjustments for Mobile Devices */
+@media (max-width: 768px) {
+    .header {
+        height: auto; /* Allow height to adjust dynamically */
+        min-height: 300px; /* Set a minimum height for smaller screens */
+        background-size: contain; /* Ensures the entire image is visible (zooms out) */
+        background-repeat: no-repeat; /* Prevents the image from repeating */
+        background-position: center; /* Keeps the image centered */
+    }
+}
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+           /* background: linear-gradient(to bottom, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.5)); /* Gradient overlay */
+            z-index: 1;
+        }
+        .header-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+        }
+        .header h1 {
+            font-size: 4rem;
+            letter-spacing: 2px;
+            animation: fadeIn 2s ease-in-out;
+        }
+        .header p {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            animation: fadeIn 3s ease-in-out;
+        }
+        .cta-button {
+            background-color: #ff6700;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.2rem;
+            color: white;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(255, 103, 0, 0.3);
+            margin-top: 420px;
+        }
+        .cta-button:hover {
+            background-color: #ff4500;
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(255, 103, 0, 0.5);
+            
+        }
+
+/* Container Styling */
+.announcement-section {
+    background: linear-gradient(145deg, #ffffff, #f0f4f8); /* Subtle gradient for depth */
+    border-radius: 15px; /* Rounded corners for the container */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Soft shadow for elevation */
+    padding: 40px 20px; /* Padding inside the container */
+    margin-top: 30px; /* Space above the container */
+}
+
+/* Blog Post (Announcement Card) Styling */
+.blog-post {
+    padding: 25px;
+    background: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+}
+
+/* Hover Effect for Cards */
+.blog-post.card-hover-effect:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+    background: linear-gradient(145deg, #ffffff, #e9f0f7);
+}
+
+/* Smooth Transition for Expand/Collapse */
+.short-content,
+.full-content {
+    transition: opacity 0.3s ease, max-height 0.3s ease;
+    overflow: hidden;
+}
+
+/* Title Styling */
+.blog-post-title {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+    color: #333;
+    transition: color 0.3s ease; /* Smooth color transition */
+}
+
+.blog-post-title:hover {
+    color: #0d6efd; /* Change title color on hover */
+}
+
+/* Metadata Styling */
+.blog-post-meta {
+    font-size: 0.9rem;
+    color: #6c757d;
+    margin-bottom: 1rem;
+}
+
+/* Button Styling */
+.btn-outline-primary {
+    color: black; /* Text color */
+    text-decoration: none; /* Removes underline */
+    background: transparent; /* Keeps it transparent */
+    border: 2px solid black; /* Adds a black border */
+    transition: all 0.3s ease-in-out;
+}
+
+.btn-outline-primary:hover {
+    background: rgba(0, 0, 0, 0.1); /* Light transparent effect */
+    color: black; /* Keeps the text color */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Soft shadow effect */
+}
+
+.btn-primary {
+    background-color: #ff6700;
+    border: none;   
+    color: white;
+    border-radius: 15px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 5px 15px rgba(255, 103, 0, 0.3);
+}
+
+.btn-primary:hover {
+    background-color: #ff4500;
+    border-color: #0a58ca;
+    transform: scale(1.05); /* Slightly enlarge button on hover */
+}
+
+        
+
+        /* Features Section */
+        .features {
+            margin-top: 50px;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+        .feature-card {
+            background-color: #fff;
+            border-radius: 10px;
+            padding: 30px;
+            width: 30%;
+            margin-bottom: 20px;
+            text-align: center;
+            margin-top: 50px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+        .feature-card i {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            color: #ff6700;
+        }
+        .feature-card h3 {
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+        }
+        .feature-card p {
+            font-size: 1.1rem;
+            color: #6c757d;
+        }
+
+
+
+        /* Footer Section */
+        .footer {
+            background-color: #343a40;
+            color: white;
+            text-align: center;
+            padding: 20px 0;
+            margin-top: 50px;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+
+
+/* Ads Section */
+.ads-section {
+    margin-top: 50px;
+    background-color: #fff;
+    border-radius: 10px;
+    padding: 30px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    position: relative;
+}
+
+.ads-section h2 {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.ad-slider {
+    display: flex;
+    transition: transform 0.5s ease-in-out;
+}
+
+.ad-card-wrapper {
+    min-width: 100%;
+    position: relative;
+}
+
+.ad-card-link {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+}
+
+.ad-card {
+    display: flex;
+    align-items: center;
+    padding: 20px;
+    position: relative;
+    flex-direction: row; /* Default: image on the left */
+}
+
+/* Ad image */
+.ad-card img {
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 10px;
+    margin-right: 20px;
+}
+
+/* Ad content */
+.ad-card-content h4 {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+}
+
+.ad-card-content p {
+    font-size: 1rem;
+    color: #6c757d;
+}
+
+/* Mobile (default) styling - stack the image on top of title and description */
+@media (max-width: 767px) {
+    .ad-card {
+        flex-direction: column; /* Stack image on top */
+        text-align: center; /* Center align the content */
+    }
+
+    .ad-card img {
+        margin-right: 0;
+        margin-bottom: 15px; /* Space between image and content */
+    }
+}
+
+
+
+    /* Slider Controls */
+    .slider-controls {
+        position: absolute;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        gap: 10px;
+    }
+    .slider-controls button {
+        background-color: #ff6700;
+        border: none;
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+    .slider-controls button.active {
+        background-color: #ff4500;
+    }
+    .slider-controls button:hover {
+        background-color: #ff4500;
+    }
+
+    /* Post Ad Button */
+    .post-ad-button {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        background-color: #0d6efd;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        font-size: 1rem;
+        border-radius: 30px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 8px rgba(13, 110, 253, 0.3);
+    }
+    .post-ad-button:hover {
+        background-color: #0b5ed7;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 12px rgba(13, 110, 253, 0.5);
+    }
+
+            /* Styling for the delete button */
+        .delete-ad-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: #ff4d4d;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            font-size: 16px;
+            cursor: pointer;
+            display: none; /* Hidden by default */
+            transition: background-color 0.3s ease;
+        }
+
+        .delete-ad-button:hover {
+            background-color: #cc0000;
+        }
+
+        .ad-card-wrapper:hover .delete-ad-button {
+            display: block; /* Show on hover */
+        }
+
+        .ad-card {
+            position: relative;
+        }
+
+        .post-ad-button {
+
+    color: black; /* Text color */
+    text-decoration: none; /* Removes underline */
+    background: transparent; /* Keeps it transparent */
+    border: 2px solid black; /* Adds a black border */
+    transition: all 0.3s ease-in-out;
+}
+
+/* Hover effect */
+.post-ad-button:hover {
+    background: rgba(0, 0, 0, 0.1); /* Light transparent effect */
+    color: black; /* Keeps the text color */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Soft shadow effect */
+    border-color:#0d6efd;
+}
+
+/* Recent Jobs Section */
+.recent-jobs-section {
+    background: linear-gradient(145deg, #ffffff, #f0f4f8); /* Subtle gradient */
+    border-radius: 15px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    padding: 40px 20px;
+    margin-top: 30px;
+}
+
+.recent-jobs-section h2 {
+    font-size: 2rem;
+    color: #333;
+    text-align: center;
+}
+
+.carousel {
+    margin-top: 20px;
+}
+
+.job-card {
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    overflow: hidden;
+    padding: 20px;
+    text-align: left;
+}
+
+.job-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+}
+
+.card-title {
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+    color: #333;
+}
+
+.card-category,
+.card-location {
+    font-size: 0.9rem;
+    color: #6c757d;
+    margin-bottom: 0.5rem;
+}
+
+.card-description {
+    font-size: 0.9rem;
+    line-height: 1.5;
+    margin-bottom: 1rem;
+    color: #555;
+}
+
+.carousel-control-prev,
+.carousel-control-next {
+    width: auto;
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 50%;
+    height: 20px;
+    width: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+    filter: brightness(0) invert(1); /* White arrows */
+}
+
+
+.card-thumbnail {
+    width: 90%;
+    height: auto; /* Fixed height for consistency */
+    object-fit:contain; /* Ensures the image fits nicely */
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+    margin: 25px;
+
+}
+
+
+

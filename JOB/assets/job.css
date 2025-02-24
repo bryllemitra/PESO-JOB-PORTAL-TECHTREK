@@ -1,0 +1,215 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+
+.job-overview p {
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+}
+
+.section-title {
+    font-size: 1.25rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+}
+
+.btn-action {
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+}
+
+.card-img-top {
+    border-radius: 0.5rem 0.5rem 0 0;
+}
+
+.card {
+    border-radius: 1rem;
+}
+
+    /* Futuristic Card */
+    .card-futuristic {
+        background: linear-gradient(145deg, #ffffff, #f8f9fa);
+        color: #333333;
+        border-radius: 15px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.06);
+    }
+    .card-futuristic .card-body {
+        padding: 2rem;
+    }
+    
+    /* Futuristic Text */
+    .text-futuristic {
+        font-family: 'Roboto', sans-serif;
+        font-weight: bold;
+        letter-spacing: 1px;
+        color: #1976d2;
+    }
+    
+    /* Futuristic Divider */
+    .divider-futuristic {
+        border: none;
+        height: 2px;
+        background: linear-gradient(90deg, #e0e0e0, #ffffff, #e0e0e0);
+        margin: 1.5rem 0;
+    }
+    
+    /* Futuristic Primary Button */
+    .btn-futuristic-primary {
+        background: linear-gradient(145deg, #1976d2, #1565c0); /* Main gradient */
+        color: white;
+        border: none;
+        border-radius: 25px;
+        padding: 0.75rem 1.5rem;
+        transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease; /* Smooth transition for hover effects */
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.06);
+    }
+    .btn-futuristic-primary:hover {
+        background: linear-gradient(145deg, #1565c0, #0d47a1); /* Darker gradient on hover */
+        color: white;
+        transform: scale(1.05); /* Slightly grow the button */
+        box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15), 0 2px 4px rgba(0, 0, 0, 0.1); /* Enhanced shadow on hover */
+    }
+    
+    /* Responsive Design for Buttons */
+    @media (max-width: 768px) {
+        .btn-futuristic-primary {
+            padding: 0.5rem 1rem;
+            font-size: 0.9rem;
+        }
+    }
+    
+    .btn-futuristic-success {
+        background: linear-gradient(145deg, #4caf50, #388e3c);
+        color: white;
+        border: none;
+        border-radius: 25px;
+        padding: 0.75rem 1.5rem;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.06);
+    }
+    .btn-futuristic-success:hover {
+        transform: scale(1.05);
+        box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15), 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    
+    /* Futuristic Back Button (White Version) */
+    .btn-futuristic-back {
+        background: linear-gradient(145deg, #ffffff, #f8f9fa); /* White gradient */
+        color: #333333; /* Dark text for contrast */
+        border: 1px solid #e0e0e0; /* Subtle border for definition */
+        border-radius: 25px;
+        padding: 0.75rem 1.5rem;
+        transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease, color 0.3s ease;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.06);
+    }
+    .btn-futuristic-back:hover {
+        background: linear-gradient(145deg, #f8f9fa, #ffffff); /* Slightly darker gradient on hover */
+        color: #1976d2; /* Blue text on hover for emphasis */
+        transform: scale(1.05);
+        box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15), 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    
+    /* Responsive Design for Buttons */
+    @media (max-width: 768px) {
+        .btn-futuristic-back {
+            padding: 0.5rem 1rem;
+            font-size: 0.9rem;
+        }
+    }
+    
+    /* Futuristic Form Elements */
+    .form-futuristic {
+        background: linear-gradient(145deg, #ffffff, #f8f9fa);
+        border: 1px solid #e0e0e0;
+        border-radius: 10px;
+        padding: 0.75rem;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.06);
+    }
+    .form-futuristic:focus {
+        transform: scale(1.02);
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .card-futuristic {
+            border-radius: 10px;
+        }
+        .btn-futuristic-primary,
+        .btn-futuristic-success,
+        .btn-futuristic-back {
+            padding: 0.5rem 1rem;
+            font-size: 0.9rem;
+        }
+        .form-futuristic {
+            padding: 0.5rem;
+        }
+    }
+
+    .divider-futuristic {
+        border-color: #ccc;
+    }
+    .text-futuristic {
+        color: #0d6efd;
+    }
+    .btn-futuristic-primary {
+        background-color: #0d6efd;
+        color: white;
+    }
+    .btn-futuristic-success {
+        background-color: #198754;
+        color: white;
+    }
+    .btn-futuristic-back {
+        background-color: #f8f9fa;
+        color: #0d6efd;
+        border: 1px solid #0d6efd;
+    }
+    .card-futuristic {
+        border-radius: 1rem;
+    }
+    .img-fluid-large {
+        max-width: 100%;
+        height: auto;
+        max-height: 880px; /* Increased height */
+    }
+    .scrollable-container {
+        max-height: 780px; /* Match the image height */
+        overflow-y: auto; /* Enable vertical scrolling */
+    }
+    .landscape-layout {
+        margin-top: 2rem; /* Add some spacing */
+    }
+    @media (max-width: 768px) {
+        .landscape-layout {
+            flex-direction: column !important;
+        }
+        .image-column {
+            order: 2; /* Move image below details on small screens */
+        }
+        .details-column {
+            order: 1; /* Move details above image on small screens */
+        }
+        .scrollable-container {
+            max-height: none; /* Disable scrolling on small screens */
+        }
+        .img-fluid-large {
+            max-height: 400px; /* Adjust height for smaller screens */
+        }
+    }
+
+    .btn {
+        font-size: 0.8rem;
+        padding: 0.6rem 1.5rem;
+        border: none;
+        border-radius: 15px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-transform: uppercase;
+        font-weight: 500;
+        letter-spacing: 0.5px;
+    }

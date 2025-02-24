@@ -1,0 +1,286 @@
+<?php
+session_start();
+include '../includes/config.php';
+
+// CSRF Token Generation
+if (empty($_SESSION['csrf_token'])) {
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+}
+
+$errors = [];
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Validate CSRF Token
+    if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+        $errors[] = "Invalid CSRF token.";
+    }
+
+    // Sanitize and Validate Inputs
+    $email = filter_var($_POST['email'] ?? '', FILTER_SANITIZE_EMAIL);
+    $password = $_POST['password'] ?? '';
+    $username = htmlspecialchars($_POST['username'] ?? '');
+    $firstName = htmlspecialchars($_POST['first_name'] ?? '');
+    $middleName = htmlspecialchars($_POST['middle_name'] ?? '');
+    $lastName = htmlspecialchars($_POST['last_name'] ?? '');
+    $extName = htmlspecialchars($_POST['ext_name'] ?? '');
+    $gender = htmlspecialchars($_POST['gender'] ?? '');
+    $birthDate = htmlspecialchars($_POST['birth_date'] ?? '');
+    $age = intval($_POST['age'] ?? 0);
+    $phoneNumber = htmlspecialchars($_POST['phone_number'] ?? '');
+    $placeOfBirth = htmlspecialchars($_POST['place_of_birth'] ?? ''); // Fixed: Added default value
+    $civilStatus = htmlspecialchars($_POST['civil_status'] ?? ''); // Fixed: Added default value
+    $zipCode = htmlspecialchars($_POST['zip_code'] ?? '');
+    $streetAddress = htmlspecialchars($_POST['street_address'] ?? '');
+    $barangay = htmlspecialchars($_POST['barangay'] ?? '');
+    $city = htmlspecialchars($_POST['city'] ?? '');
+    $educationLevel = htmlspecialchars($_POST['education_level'] ?? '');
+    $completionYear = intval($_POST['completion_year'] ?? 0);
+    $schoolName = htmlspecialchars($_POST['school_name'] ?? '');
+    $inclusiveYears = htmlspecialchars($_POST['inclusive_years'] ?? '');
+
+    // Validate Phone Number (11 digits)
+    if (!preg_match('/^\d{11}$/', $phoneNumber)) {
+        $errors[] = "Phone number must be exactly 11 digits.";
+    }
+
+    // Validate Email
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $errors[] = "Invalid email format.";
+    }
+
+    // Validate Password (at least 8 characters)
+    if (strlen($password) < 8) {
+        $errors[] = "Password must be at least 8 characters long.";
+    }
+
+    // Check if email or username already exists
+    $stmt = $conn->prepare("SELECT id FROM users WHERE email = ? OR username = ?");
+    $stmt->bind_param("ss", $email, $username);
+    $stmt->execute();
+    $stmt->store_result();
+    if ($stmt->num_rows > 0) {
+        $errors[] = "Email or username already exists.";
+    }
+    $stmt->close();
+
+    // If no errors, insert into database
+    if (empty($errors)) {
+        $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
+        $stmt = $conn->prepare("INSERT INTO users (
+            email, password, username, first_name, middle_name, last_name, ext_name, gender, birth_date, age, phone_number, place_of_birth, civil_status, zip_code, street_address, barangay, city, education_level, completion_year, school_name, inclusive_years
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+        $stmt->bind_param("ssssssssssissssssssss", $email, $hashedPassword, $username, $firstName, $middleName, $lastName, $extName, $gender, $birthDate, $age, $phoneNumber, $placeOfBirth, $civilStatus, $zipCode, $streetAddress, $barangay, $city, $educationLevel, $completionYear, $schoolName, $inclusiveYears);
+        if ($stmt->execute()) {
+            header("Location: login.php");
+            exit();
+        } else {
+            $errors[] = "Registration failed. Please try again.";
+        }
+        $stmt->close();
+    }
+}
+?>
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .logo {
+            width: 100px;
+            height: auto;
+            margin-bottom: 20px;
+        }
+        .rotating-logo {
+            animation: rotate 4s linear infinite;
+        }
+        @keyframes rotate {
+            100% { transform: rotate(360deg); }
+        }
+        .form-section {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card mt-5">
+                    <div class="card-header text-center">
+                        <img src="/JOB/uploads/PESO.png" alt="Logo" class="logo rotating-logo">
+                        <h2>Register</h2>
+                    </div>
+                    <div class="card-body">
+                        <?php if (!empty($errors)): ?>
+                            <div class="alert alert-danger">
+                                <?php foreach ($errors as $error): ?>
+                                    <p><?php echo $error; ?></p>
+                                <?php endforeach; ?>
+                            </div>
+                        <?php endif; ?>
+                        <form method="POST" action="">
+                            <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
+
+                            <!-- Basic Info -->
+                            <div class="form-section">
+                                <h4>Basic Information</h4>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <label for="first_name" class="form-label">First Name</label>
+                                        <input type="text" class="form-control" id="first_name" name="first_name" required>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="last_name" class="form-label">Last Name</label>
+                                        <input type="text" class="form-control" id="last_name" name="last_name" required>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <label for="middle_name" class="form-label">Middle Name</label>
+                                        <input type="text" class="form-control" id="middle_name" name="middle_name">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="ext_name" class="form-label">Extension Name</label>
+                                        <input type="text" class="form-control" id="ext_name" name="ext_name">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <label for="gender" class="form-label">Gender</label>
+                                        <select class="form-select" id="gender" name="gender" required>
+                                            <option value="Male">Male</option>
+                                            <option value="Female">Female</option>
+                                            <option value="Other">Other</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="birth_date" class="form-label">Birth Date</label>
+                                        <input type="date" class="form-control" id="birth_date" name="birth_date" required>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <label for="age" class="form-label">Age</label>
+                                        <input type="number" class="form-control" id="age" name="age" required>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="phone_number" class="form-label">Phone Number</label>
+                                        <input type="text" class="form-control" id="phone_number" name="phone_number" maxlength="11" required>
+                                    </div>
+                                </div>
+                            </div>
+
+<!-- Address Section -->
+<div class="form-section">
+    <h4>Address</h4>
+    <div class="row">
+        <div class="col-md-6">
+            <label for="street_address" class="form-label">Street Address</label>
+            <input type="text" class="form-control" id="street_address" name="street_address" required>
+        </div>
+        <div class="col-md-6">
+            <label for="barangay" class="form-label">Barangay</label>
+            <input type="text" class="form-control" id="barangay" name="barangay" required>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <label for="city" class="form-label">City</label>
+            <input type="text" class="form-control" id="city" name="city" required>
+        </div>
+        <div class="col-md-6">
+            <label for="zip_code" class="form-label">Zip Code</label>
+            <input type="text" class="form-control" id="zip_code" name="zip_code" required>
+        </div>
+    </div>
+</div>
+
+<!-- Place of Birth and Civil Status -->
+<div class="form-section">
+    <div class="row">
+        <div class="col-md-6">
+            <label for="place_of_birth" class="form-label">Place of Birth</label>
+            <input type="text" class="form-control" id="place_of_birth" name="place_of_birth" required>
+        </div>
+        <div class="col-md-6">
+            <label for="civil_status" class="form-label">Civil Status</label>
+            <select class="form-select" id="civil_status" name="civil_status" required>
+                <option value="Single">Single</option>
+                <option value="Married">Married</option>
+                <option value="Divorced">Divorced</option>
+                <option value="Widowed">Widowed</option>
+            </select>
+        </div>
+    </div>
+</div>
+
+                            <!-- Education -->
+                            <div class="form-section">
+                                <h4>Education</h4>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <label for="education_level" class="form-label">Education Level</label>
+                                        <input type="text" class="form-control" id="education_level" name="education_level" required>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="completion_year" class="form-label">Completion Year</label>
+                                        <input type="number" class="form-control" id="completion_year" name="completion_year" required>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <label for="school_name" class="form-label">School Name</label>
+                                        <input type="text" class="form-control" id="school_name" name="school_name" required>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="inclusive_years" class="form-label">Inclusive Years</label>
+                                        <input type="text" class="form-control" id="inclusive_years" name="inclusive_years" required>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Account Info -->
+                            <div class="form-section">
+                                <h4>Account Information</h4>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <label for="email" class="form-label">Email</label>
+                                        <input type="email" class="form-control" id="email" name="email" required>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="username" class="form-label">Username</label>
+                                        <input type="text" class="form-control" id="username" name="username" required>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <label for="password" class="form-label">Password</label>
+                                        <input type="password" class="form-control" id="password" name="password" required>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary w-100">Register</button>
+                        </form>
+                        <p class="login-link text-center mt-3">Already have an account? <a href="login.php">Sign in here</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Limit phone number input to 11 digits
+        document.getElementById('phone_number').addEventListener('input', function (e) {
+            if (this.value.length > 11) {
+                this.value = this.value.slice(0, 11);
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,140 @@
+/* General Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Futuristic Table Styles */
+.table-futuristic {
+    width: 100%;
+    border-collapse: collapse;
+    background: #ffffff;
+    color: #333333;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.06);
+}
+
+/* Table Header */
+.table-futuristic th,
+.table-futuristic td {
+    padding: 1rem;
+    text-align: left;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+/* Table Header Styling */
+.table-futuristic th {
+    background: #f8f9fa;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Row Hover Effect */
+.table-futuristic tr:hover {
+    background: #f1f3f5;
+}
+
+
+
+
+
+
+/* Hover effects for buttons */
+.btn-light-futuristic:hover {
+    background: #ffffff;  /* White background on hover */
+    border-color: #fd7e14;  /* Orange border */
+    color: #fd7e14;  /* Orange text */
+    box-shadow: 0 4px 6px rgba(253, 126, 20, 0.2);  /* Light orange shadow */
+    transform: scale(1.05);  /* Slight zoom on hover */
+}
+
+.btn-light-check:hover {
+    background: #ffffff;  /* White background on hover */
+    border-color: #28a745;  /* Green border */
+    color: #28a745;  /* Green text */
+    box-shadow: 0 4px 6px rgba(40, 167, 69, 0.2);  /* Light green shadow */
+    transform: scale(1.05);  /* Slight zoom on hover */
+}
+
+.btn-light-cross:hover {
+    background: #ffffff;  /* White background on hover */
+    border-color: #dc3545;  /* Red border */
+    color: #dc3545;  /* Red text */
+    box-shadow: 0 4px 6px rgba(220, 53, 69, 0.2);  /* Light red shadow */
+    transform: scale(1.05);  /* Slight zoom on hover */
+}
+
+.btn-light-download:hover {
+    background: #ffffff;  /* White background on hover */
+    border-color: #4c6ef5;  /* Blue border */
+    color: #4c6ef5;  /* Blue text */
+    box-shadow: 0 4px 6px rgba(76, 110, 245, 0.2);  /* Light blue shadow */
+    transform: scale(1.05);  /* Slight zoom on hover */
+}
+
+
+
+/* Back Button */
+.btn-back {
+    background: transparent;
+    color: #333333;
+    border: 1px solid #e0e0e0;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    transition: transform 0.3s ease, color 0.3s ease;
+    
+}
+
+.btn-back:hover {
+    color: #1976d2;  /* Blue text color on hover */
+    transform: scale(1.05);  /* Slight zoom effect */
+    background: #ffffff;  /* White background on hover */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);  /* Light black shadow with subtle opacity */
+}
+
+
+/* Futuristic Text Styles */
+.text-futuristic {
+    font-family: 'Roboto', sans-serif;
+    font-size: 1.5rem;
+    color: #333333;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.text-futuristic-link {
+    color: #1976d2;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+    transition: color 0.3s ease;
+}
+
+.text-futuristic-link:hover {
+    color: #1565c0;
+}
+
+/* Mobile Flexibility */
+@media (max-width: 768px) {
+    .table-futuristic th,
+    .table-futuristic td {
+        padding: 0.67rem;
+        font-size: 0.9rem;
+        word-wrap: break-word;  /* Ensure content breaks to avoid overflow */
+    }
+
+    .btn-light-futuristic,
+    .btn-light-check,
+    .btn-light-cross,
+    .btn-light-download,
+    .btn-back {
+        padding: 0.3rem 0.75rem;
+        font-size: 0.9rem;
+    }
+
+    /* Making the table container flexible */
+    .table-futuristic {
+        display: block;
+        overflow-x: auto;  /* Adds horizontal scrolling */
+    }
+}

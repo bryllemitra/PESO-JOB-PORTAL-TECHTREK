@@ -1,0 +1,264 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+
+
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f9fafb;
+            color: #333;
+            line-height: 1.6;
+            margin-top:20px;
+        }
+
+    
+/* Search and Sort Form */
+.form-control, .form-select {
+    height: calc(2.5em + 1rem + 2px); /* Larger input height */
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    border-radius: 50px; /* Fully rounded corners */
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 8px rgba(0, 123, 255, 0.25); /* Subtle glow */
+}
+
+        /* Sidebar */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 250px;
+            height: 100vh;
+            background: #ffffff;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            box-shadow: 2px 0 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease-in-out;
+        }
+        .sidebar.hidden {
+            transform: translateX(-100%);
+        }
+        .sidebar h2 {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            text-align: center;
+            color: #4a90e2;
+        }
+        .sidebar ul {
+            list-style: none;
+        }
+        .sidebar ul li {
+            margin-bottom: 15px;
+        }
+        .sidebar ul li a {
+            text-decoration: none;
+            color: #333;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
+            border-radius: 10px;
+            transition: background 0.3s, color 0.3s;
+        }
+        .sidebar ul li a:hover,
+        .sidebar ul li a.active {
+            background: #eaf4ff;
+            color: #4a90e2;
+        }
+        .sidebar .toggle-btn {
+            position: absolute;
+            top: 20px;
+            right: -40px;
+            background: #4a90e2;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .sidebar .toggle-btn i {
+            color: #fff;
+            font-size: 1.2rem;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: 250px;
+            padding: 20px;
+            transition: margin-left 0.3s ease-in-out;
+        }
+        .main-content.hidden {
+            margin-left: 0;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .header h1 {
+            font-size: 2rem;
+            color: #000000;
+        }
+
+
+
+
+/* User List */
+.user-list {
+    background: #ffffff;
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.user-header,
+.user-item {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr; /* Default layout for larger screens */
+    align-items: center;
+    padding: 15px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.user-header {
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #000000be;
+    border-bottom: 2px solid #eee;
+}
+
+.user-item:last-child {
+    border-bottom: none;
+}
+
+.user-item div {
+    font-size: 0.9rem;
+    color: #666;
+}
+
+.user-item .username {
+    font-weight: bold;
+    color: #4a90e2;
+}
+
+.user-item .role {
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+}
+
+.user-item .actions {
+    display: flex;
+    gap: 10px;
+}
+
+.user-item .actions button {
+    background: none;
+    border: none;
+    color: #4a90e2;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: color 0.3s;
+}
+
+.user-item .actions button:hover {
+    color: #357abd;
+}
+
+/* Responsive Design for Mobile and Minimized Screens */
+@media (max-width: 768px) {
+    .user-list {
+        overflow-x: auto; /* Enable horizontal scrolling */
+        white-space: nowrap; /* Prevent wrapping of items */
+    }
+
+    .user-header,
+    .user-item {
+        display: flex; /* Switch to flexbox for horizontal layout */
+        align-items: center;
+        gap: 10px; /* Add spacing between columns */
+        min-width: max-content; /* Ensure the content doesn't compress */
+    }
+
+    .user-header div,
+    .user-item div {
+        flex: 1; /* Distribute space evenly */
+        padding: 10px;
+        text-align: left;
+        font-size: 0.9rem;
+        white-space: normal; /* Allow text wrapping within each column */
+    }
+
+    /* Hide unnecessary columns */
+    .user-header div:nth-child(1), /* ID */
+    .user-header div:nth-child(4), /* Last Name */
+    .user-header div:nth-child(6), /* Role */
+    .user-header div:nth-child(7), /* Registered At */
+    .user-item div:nth-child(1), /* ID */
+    .user-item div:nth-child(4), /* Last Name */
+    .user-item div:nth-child(6), /* Role */
+    .user-item div:nth-child(7) /* Registered At */ {
+        display: none;
+    }
+}
+
+        /* Pagination */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .pagination button {
+            padding: 10px 15px;
+            background: #f9fafb;
+            border: 1px solid #ddd;
+            border-radius: 20px;
+            color: #333;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .pagination button:hover {
+            background: #eaf4ff;
+        }
+        .pagination button.active {
+            background: #4a90e2;
+            color: #fff;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            .main-content {
+                margin-left: 0;
+            }
+            .user-header, .user-item {
+                grid-template-columns: 1fr;
+                grid-gap: 10px;
+            }
+            .user-header div, .user-item div {
+                font-size: 0.8rem;
+            }
+        }
+
+        
+

@@ -1,0 +1,75 @@
+        /* Custom Styles */
+        .announcement-card {
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+            position: relative; /* For positioning the triple-dot menu */
+        }
+
+        .announcement-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .announcement-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #1976d2;
+        }
+
+        .announcement-date {
+            font-size: 0.875rem;
+            color: #6b7280;
+        }
+
+        .announcement-content {
+            font-size: 1rem;
+            line-height: 1.6;
+            color: #374151;
+        }
+
+        /* Triple-Dot Menu Styling */
+        .action-buttons {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+        }
+
+        .dropdown-menu {
+            display: none;
+            position: absolute;
+            top: 1.5rem;
+            right: 0;
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 0.375rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            z-index: 10;
+        }
+
+        .dropdown-menu.show {
+            display: block;
+        }
+
+        .down {
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            font-size: 0.875rem;
+            color: #374151;
+        }
+
+        .down:hover {
+            background-color: #f3f4f6;
+        }
+
+        .down.text-danger {
+            color: #ef4444;
+        }
+
+        .down.text-danger:hover {
+            background-color: #fee2e2;
+        }
+
+        

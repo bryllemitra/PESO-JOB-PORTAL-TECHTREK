@@ -1,0 +1,71 @@
+body {
+    background-color: white; /* White background */
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh; /* Ensure the body takes up the full viewport height */
+    overflow-y: auto; /* Enable vertical scrolling if content overflows */
+}
+.container {
+    max-width: 1200px; /* Adjusted for three columns */
+    background: white;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    margin: 20px; /* Add margin to ensure spacing on smaller screens */
+    overflow-y: auto; /* Ensure the container itself is scrollable if needed */
+}
+h2 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 20px;
+}
+.logo {
+    display: block;
+    margin: 0 auto 20px;
+    width: 150px;
+    animation: rotate 5s linear infinite;
+}
+
+.error {
+    color: red;
+    margin-bottom: 10px;
+}
+button[type="submit"] {
+    width: 100%;
+    padding: 12px;
+    font-size: 16px;
+    background: linear-gradient(135deg, #6e8efb, #a777e3);
+    border: none;
+    border-radius: 8px;
+    color: white;
+    transition: transform 0.3s ease;
+}
+button[type="submit"]:hover {
+    transform: scale(1.05);
+}
+.login-link {
+    text-align: center;
+    margin-top: 15px;
+}
+.login-link a {
+    color: #007bff;
+    text-decoration: none;
+}
+.login-link a:hover {
+    text-decoration: underline;
+}
+@media (max-width: 768px) {
+    .col-lg-4 {
+        flex: 0 0 100%; /* Make each column take full width on small screens */
+        max-width: 100%;
+    }
+    .container {
+        padding: 15px; /* Reduce padding for smaller screens */
+    }
+    h2 {
+        font-size: 1.5rem; /* Reduce heading size for better fit */
+    }
+}
